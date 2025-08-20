@@ -1,0 +1,65 @@
+name: Build macOS standalone
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Create .icns from PNG (requires img/app.png or replace path)
+        run: |
+          ICON_PNG="img/app.png"
+          ICONSET_DIR="icon.iconset"
+          mkdir -p "$ICONSET_DIR"
+          # generate various sizes, including @2x retina variants
+          sips -z 16 16     "$ICON_PNG" --out "$ICONSET_DIR/icon_16x16.png"
+          sips -z 32 32     "$ICON_PNG" --out "$ICONSET_DIR/icon_16x16@2x.png"
+          sips -z 32 32     "$ICON_PNG" --out "$ICONSET_DIR/icon_32x32.png"
+          sips -z 64 64     "$ICON_PNG" --out "$ICONSET_DIR/icon_32x32@2x.png"
+          sips -z 64 64     "$ICON_PNG" --out "$ICONSET_DIR/icon_64x64.png"
+          sips -z 128 128   "$ICON_PNG" --out "$ICONSET_DIR/icon_64x64@2x.png"
+          sips -z 128 128   "$ICON_PNG" --out "$ICONSET_DIR/icon_128x128.png"
+          sips -z 256 256   "$ICON_PNG" --out "$ICONSET_DIR/icon_128x128@2x.png"
+          sips -z 256 256   "$ICON_PNG" --out "$ICONSET_DIR/icon_256x256.png"
+          sips -z 512 512   "$ICON_PNG" --out "$ICONSET_DIR/icon_256x256@2x.png"
+          sips -z 512 512   "$ICON_PNG" --out "$ICONSET_DIR/icon_512x512.png"
+          sips -z 1024 1024 "$ICON_PNG" --out "$ICONSET_DIR/icon_512x512@2x.png"
+          iconutil -c icns "$ICONSET_DIR" -o img/app.icns
+
+      - name: Build with PyInstaller
+        run: |
+          source .venv/bin/activate
+          pyinstaller --noconfirm --clean --windowed --name config_app --icon img/app.icns config_app.py
+
+      - name: Package .app into zip
+        run: |
+          if [ -d "dist/config_app.app" ]; then
+            ditto -c -k --sequesterRsrc --keepParent "dist/config_app.app" "dist/config_app-macos.zip"
+          else
+            echo "Expected dist/config_app.app not found" && exit 1
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: config_app-macos
+          path: dist/config_app-macos.zip

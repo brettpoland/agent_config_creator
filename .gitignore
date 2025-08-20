@@ -1,0 +1,76 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+*.whl
+*.spec
+
+# PyInstaller
+# (build/ and dist/ above already cover most output)
+*.manifest
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Tests and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Logs
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+
+# macOS iconset / generated icns
+icon.iconset/
+img/*.icns
+
+# Executable and compiled artifacts
+*.exe
+*.dll
+*.pyd
+*.so
+
+# Python packaging helpers
+pip-wheel-metadata/
+__pypackages__/
+
+# Misc
+*.pyo
+*.sqlite3
+
+# Secrets and environment
+.env
+.env.*
+
+# Docker overrides
+docker-compose.override.yml
+
+# keep local git-ignored files from being accidentally committed
+# (uncomment if you want to ignore local-only files)
+# .local/
