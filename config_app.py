@@ -103,6 +103,18 @@ class ConfigApp(QWidget):
             },
         }
 
+        # add common process time/token reduction section and misc option
+        self.process_time_options = [
+            "Minimize processing time",
+            "Reduce token usage",
+            "Enable response summarization",
+        ]
+        for opts in self.section_options_by_lang.values():
+            opts["process_time_token_reduction"] = list(self.process_time_options)
+            opts.setdefault("miscellaneous", []).append(
+                "Automatically push code changes to a PR and main"
+            )
+
         self.display_to_key = {
             "Python": "python",
             "Typescript": "typescript",
@@ -121,6 +133,7 @@ class ConfigApp(QWidget):
         # human-friendly section display names (override default title-casing)
         self.section_display_names = {
             "web_kits_and_gui_libraries": "Web / GUI Libraries",
+            "process_time_token_reduction": "Process Time / Token Reduction",
         }
 
         self._build_ui()
@@ -209,6 +222,7 @@ class ConfigApp(QWidget):
         opts_map = self.section_options_by_lang.get(key, {})
 
         order = [
+            "process_time_token_reduction",
             "authentication",
             "performance",
             "code_quality",
@@ -297,6 +311,7 @@ class ConfigApp(QWidget):
         lines = ["# Agent Configuration", "", f"Language: **{lang}**", f"Format: **{fmt}**", ""]
 
         order = [
+            "process_time_token_reduction",
             "authentication",
             "performance",
             "code_quality",

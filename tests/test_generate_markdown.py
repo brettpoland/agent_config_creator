@@ -1,4 +1,5 @@
 import pytest
+from PyQt5.QtWidgets import QCheckBox
 from config_app import ConfigApp
 
 
@@ -29,3 +30,24 @@ def test_custom_behavior_included(qtbot):
     md = win.generate_markdown()
     assert '## Custom Behavior' in md
     assert 'Do this and that' in md
+
+
+def test_process_time_section_present(qtbot):
+    win = ConfigApp()
+    qtbot.addWidget(win)
+    win.update_sections('Python')
+    md = win.generate_markdown()
+    assert '## Process Time / Token Reduction' in md
+
+
+def test_auto_push_option_in_misc(qtbot):
+    win = ConfigApp()
+    qtbot.addWidget(win)
+    win.update_sections('Python')
+    misc_gb = win.sections.get('miscellaneous')
+    if misc_gb:
+        for cb in misc_gb.findChildren(QCheckBox):
+            if cb.text() == 'Automatically push code changes to a PR and main':
+                cb.setChecked(True)
+    md = win.generate_markdown()
+    assert 'Automatically push code changes to a PR and main' in md
