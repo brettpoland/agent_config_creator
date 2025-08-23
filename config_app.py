@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import (
     QRadioButton,
     QButtonGroup,
     QMessageBox,
+    QStackedWidget,
 )
 from PyQt5.QtCore import Qt
 
@@ -362,8 +363,96 @@ class ConfigApp(QWidget):
         return "\n".join(lines)
 
 
+class MainMenu(QWidget):
+    def __init__(self, open_config, open_optimizer):
+        super().__init__()
+        layout = QVBoxLayout()
+        btn_config = QPushButton("Agent Guide Creator")
+        btn_optimizer = QPushButton("Agent Optimizer")
+        btn_config.clicked.connect(open_config)
+        btn_optimizer.clicked.connect(open_optimizer)
+        layout.addWidget(btn_config)
+        layout.addWidget(btn_optimizer)
+        layout.addStretch()
+        self.setLayout(layout)
+
+
+class AgentOptimizerMenu(QWidget):
+    def __init__(self, go_back, open_agent):
+        super().__init__()
+        layout = QVBoxLayout()
+        back = QPushButton("\u2190 Back")
+        back.clicked.connect(go_back)
+        layout.addWidget(back, alignment=Qt.AlignLeft)
+        for name in ["Co-Pilot", "Cline", "Codex"]:
+            btn = QPushButton(name)
+            btn.clicked.connect(lambda _, n=name: open_agent(n))
+            layout.addWidget(btn)
+        layout.addStretch()
+        self.setLayout(layout)
+
+
+class AgentDetail(QWidget):
+    def __init__(self, go_back):
+        super().__init__()
+        layout = QVBoxLayout()
+        back = QPushButton("\u2190 Back")
+        back.clicked.connect(go_back)
+        layout.addWidget(back, alignment=Qt.AlignLeft)
+
+        self.title = QLabel("")
+        layout.addWidget(self.title, alignment=Qt.AlignCenter)
+
+        layout.addWidget(QLabel("Model reasoning effort"))
+        self.combo = QComboBox()
+        self.combo.addItems(["low", "medium", "high"])
+        layout.addWidget(self.combo)
+
+        layout.addStretch()
+        apply_btn = QPushButton("Apply")
+        layout.addWidget(apply_btn, alignment=Qt.AlignCenter)
+        self.setLayout(layout)
+
+    def set_agent(self, name):
+        self.title.setText(name)
+
+
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Agent Tools")
+        self.setGeometry(100, 100, 700, 650)
+        self.stack = QStackedWidget()
+        layout = QVBoxLayout()
+        layout.addWidget(self.stack)
+        self.setLayout(layout)
+
+        self.config_app = ConfigApp()
+        self.main_menu = MainMenu(self.show_config, self.show_optimizer)
+        self.optimizer_menu = AgentOptimizerMenu(self.show_main, self.show_agent)
+        self.agent_detail = AgentDetail(self.show_optimizer)
+
+        self.stack.addWidget(self.main_menu)
+        self.stack.addWidget(self.config_app)
+        self.stack.addWidget(self.optimizer_menu)
+        self.stack.addWidget(self.agent_detail)
+
+    def show_main(self):
+        self.stack.setCurrentWidget(self.main_menu)
+
+    def show_config(self):
+        self.stack.setCurrentWidget(self.config_app)
+
+    def show_optimizer(self):
+        self.stack.setCurrentWidget(self.optimizer_menu)
+
+    def show_agent(self, name):
+        self.agent_detail.set_agent(name)
+        self.stack.setCurrentWidget(self.agent_detail)
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = ConfigApp()
+    w = MainWindow()
     w.show()
     sys.exit(app.exec_())
