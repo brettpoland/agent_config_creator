@@ -22,8 +22,9 @@ from PyQt5.QtCore import Qt
 
 
 class ConfigApp(QWidget):
-    def __init__(self):
+    def __init__(self, go_back=None):
         super().__init__()
+        self.go_back = go_back or (lambda: None)
         self.setWindowTitle("Agent Coding Config Creator")
         self.setGeometry(100, 100, 700, 650)
 
@@ -142,16 +143,9 @@ class ConfigApp(QWidget):
     def _build_ui(self):
         layout = QVBoxLayout()
 
-        # fake title bar (blue) under native title
-        header = QWidget()
-        header_layout = QHBoxLayout()
-        header_label = QLabel("Agent Coding Config Creator")
-        header_label.setStyleSheet("color: white; font-weight: bold; font-size: 14pt;")
-        header_layout.addWidget(header_label)
-        header_layout.addStretch()
-        header.setLayout(header_layout)
-        header.setStyleSheet("background-color: #0078d4; padding: 8px;")
-        layout.addWidget(header)
+        back_btn = QPushButton("\u2190 Back")
+        back_btn.clicked.connect(self.go_back)
+        layout.addWidget(back_btn, alignment=Qt.AlignLeft)
 
         # language selector
         h = QHBoxLayout()
@@ -367,6 +361,17 @@ class MainMenu(QWidget):
     def __init__(self, open_config, open_optimizer):
         super().__init__()
         layout = QVBoxLayout()
+
+        header = QWidget()
+        header_layout = QHBoxLayout()
+        header_label = QLabel("Agent Coding Config Creator")
+        header_label.setStyleSheet("color: white; font-weight: bold; font-size: 14pt;")
+        header_layout.addWidget(header_label)
+        header_layout.addStretch()
+        header.setLayout(header_layout)
+        header.setStyleSheet("background-color: #0078d4; padding: 8px;")
+        layout.addWidget(header)
+
         btn_config = QPushButton("Agent Guide Creator")
         btn_optimizer = QPushButton("Agent Optimizer")
         btn_config.clicked.connect(open_config)
@@ -427,7 +432,7 @@ class MainWindow(QWidget):
         layout.addWidget(self.stack)
         self.setLayout(layout)
 
-        self.config_app = ConfigApp()
+        self.config_app = ConfigApp(self.show_main)
         self.main_menu = MainMenu(self.show_config, self.show_optimizer)
         self.optimizer_menu = AgentOptimizerMenu(self.show_main, self.show_agent)
         self.agent_detail = AgentDetail(self.show_optimizer)
