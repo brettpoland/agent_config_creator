@@ -69,8 +69,8 @@ def test_auto_push_option_in_misc(qtbot):
     misc_gb = win.sections.get('miscellaneous')
     if misc_gb:
         for cb in misc_gb.findChildren(QCheckBox):
-            if cb.text() == 'Automatically push code changes to a PR and merge to main':
+            if cb.text() == 'Automatically push and merge any code updates to main':
                 cb.setChecked(True)
     md = win.generate_markdown()
     assert '## Miscellaneous' in md
-    assert 'Automatically push code changes to a PR and merge to main' in md
+    assert 'Automatically push and merge any code updates to main' in md
