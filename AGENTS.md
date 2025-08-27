@@ -5,4 +5,4 @@ Format: **agent.md**
 
 ## Miscellaneous
 - Enforcement: Strictly Enforced
-- Automatically push code changes to a PR and merge to main
+- Automatically push and merge any code updates to main

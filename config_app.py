@@ -114,7 +114,7 @@ class ConfigApp(QWidget):
         for opts in self.section_options_by_lang.values():
             opts["process_time_token_reduction"] = list(self.process_time_options)
             opts.setdefault("miscellaneous", []).append(
-                "Automatically push code changes to a PR and merge to main"
+                "Automatically push and merge any code updates to main"
             )
 
         self.display_to_key = {
