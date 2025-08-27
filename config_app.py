@@ -317,15 +317,16 @@ class ConfigApp(QWidget):
         ]
 
         for sec in order:
-            header = self.section_display_names.get(sec, sec.replace("_", " ").title())
-            lines.append(f"## {header}")
             gb = self.sections.get(sec)
             if not gb:
-                lines.append("- (no options)")
-                lines.append("")
                 continue
 
             selected = [cb.text() for cb in gb.findChildren(QCheckBox) if cb.isChecked()]
+            if not selected:
+                continue
+
+            header = self.section_display_names.get(sec, sec.replace("_", " ").title())
+            lines.append(f"## {header}")
 
             # enforcement: default to Strictly Enforced unless the 'Allow AI...' option (id 2) is selected
             bg = self.section_enforcement.get(sec)
@@ -339,11 +340,8 @@ class ConfigApp(QWidget):
                 enforcement_text = "Strictly Enforced"
 
             lines.append(f"- Enforcement: {enforcement_text}")
-            if not selected:
-                lines.append("- (none selected)")
-            else:
-                for s in selected:
-                    lines.append(f"- {s}")
+            for s in selected:
+                lines.append(f"- {s}")
             lines.append("")
 
         # append custom behavior
