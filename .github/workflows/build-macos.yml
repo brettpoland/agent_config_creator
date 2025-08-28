@@ -25,6 +25,14 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Determine script
+        id: script
+        run: |
+          SCRIPT=$(ls *.py | head -n 1)
+          BASENAME=${SCRIPT%.py}
+          echo "script=$SCRIPT" >> $GITHUB_OUTPUT
+          echo "basename=$BASENAME" >> $GITHUB_OUTPUT
+
       - name: Create .icns from PNG (requires img/app.png or replace path)
         run: |
           ICON_PNG="img/app.png"
@@ -48,18 +56,18 @@ jobs:
       - name: Build with PyInstaller
         run: |
           source .venv/bin/activate
-          pyinstaller --noconfirm --clean --windowed --name config_app --icon img/app.icns config_app.py
+          pyinstaller --noconfirm --clean --windowed --name "${{ steps.script.outputs.basename }}" --icon img/app.icns "${{ steps.script.outputs.script }}"
 
       - name: Package .app into zip
         run: |
-          if [ -d "dist/config_app.app" ]; then
-            ditto -c -k --sequesterRsrc --keepParent "dist/config_app.app" "dist/config_app-macos.zip"
+          if [ -d "dist/${{ steps.script.outputs.basename }}.app" ]; then
+            ditto -c -k --sequesterRsrc --keepParent "dist/${{ steps.script.outputs.basename }}.app" "dist/${{ steps.script.outputs.basename }}-macos.zip"
           else
-            echo "Expected dist/config_app.app not found" && exit 1
+            echo "Expected dist/${{ steps.script.outputs.basename }}.app not found" && exit 1
           fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: config_app-macos
-          path: dist/config_app-macos.zip
+          name: ${{ steps.script.outputs.basename }}-macos
+          path: dist/${{ steps.script.outputs.basename }}-macos.zip

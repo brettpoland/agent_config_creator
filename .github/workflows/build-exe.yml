@@ -21,15 +21,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller PyQt5
 
-      - name: Build executable
+      - name: Build executables
+        shell: pwsh
         run: |
-          pyinstaller --onefile env_var_editor.py
+          Get-ChildItem -Path . -Filter *.py | ForEach-Object {
+            pyinstaller --onefile $_.Name
+          }
 
-      - name: Upload executable
+      - name: Upload executables
         uses: actions/upload-artifact@v4
         with:
-          name: env_var_editor_exe
+          name: executables
           path: dist
 
       - name: Show download link
-        run: echo "Download the executable at https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
+        run: echo "Download the executables at https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
