@@ -39,62 +39,7 @@ class ConfigApp(QWidget):
                 "web_kits_and_gui_libraries": ["Django", "Flask", "FastAPI", "Qt5 (PyQt5)", "Tkinter"],
                 "miscellaneous": ["virtualenv", "packaging", "logging", "docs", "CI"],
             },
-            "julia": {
-                "authentication": ["OAuth2", "API Key", "SSH", "GPG", "Custom Token"],
-                "performance": ["Multi-threading", "BLAS/OpenBLAS", "GPU (CUDA.jl)", "Profiling", "JIT tuning"],
-                "code_quality": ["Lint.jl", "Formatter", "Documenter", "Revise", "Pkg.test"],
-                "data_layer": ["HDF5", "JLD2", "CSV", "SQLite", "Arrays"],
-                "testing": ["Pkg.test", "BenchmarkTools", "Coverage", "CI", "TestSets"],
-                "web_kits_and_gui_libraries": ["Genie (web)", "HTTP.jl", "Blink.jl", "Gtk.jl", "Makie (visuals)"],
-                "miscellaneous": ["REPL", "IJulia", "Plots", "Package manager", "Debugger"],
-            },
-            "r": {
-                "authentication": ["OAuth2", "API Key", "GCP Service Account", "AWS IAM", "LDAP"],
-                "performance": ["data.table", "parallel", "Rcpp", "byte-compile", "profiling"],
-                "code_quality": ["lintr", "styler", "testthat", "roxygen2", "covr"],
-                "data_layer": ["data.table", "SQLite", "RDS", "feather", "S3"],
-                "testing": ["testthat", "RUnit", "covr", "httptest", "mockery"],
-                "web_kits_and_gui_libraries": ["Shiny", "plumber", "R Markdown", "tcltk", "gWidgets2"],
-                "miscellaneous": ["Shiny", "RMarkdown", "pkgdown", "renv", "CRAN checks"],
-            },
-            "go": {
-                "authentication": ["OAuth2", "JWT", "mTLS", "API Key", "IAM"],
-                "performance": ["Goroutines", "Memory profiling", "cgo", "race detector", "benchmarks"],
-                "code_quality": ["gofmt", "golint", "govet", "staticcheck", "errcheck"],
-                "data_layer": ["Postgres", "BoltDB", "Redis", "gRPC", "S3"],
-                "testing": ["go test", "benchmarks", "mocking", "integration tests", "CI pipelines"],
-                "web_kits_and_gui_libraries": ["Gin", "Echo", "Revel", "Fyne (GUI)", "webview"],
-                "miscellaneous": ["Modules", "Docker", "Kubernetes", "Prometheus", "OpenTelemetry"],
-            },
-            # placeholders for other languages
-            "typescript": {
-                "authentication": ["OAuth2", "API Key", "JWT", "mTLS", "IAM"],
-                "performance": ["V8 optimizations", "Bundling", "Minification", "Tree-shaking", "Profiling"],
-                "code_quality": ["ESLint", "Prettier", "TypeScript types", "ts-node", "testing"],
-                "data_layer": ["REST", "GraphQL", "IndexedDB", "LocalStorage", "Postgres"],
-                "testing": ["Jest", "Mocha", "Playwright", "Cypress", "integration tests"],
-                "web_kits_and_gui_libraries": ["React", "Vue", "Angular", "Electron", "Svelte"],
-                "miscellaneous": ["npm scripts", "tsconfig", "lint-staged", "CI", "bundlers"],
-            },
-            "rust": {
-                "authentication": ["OAuth2", "API Key", "mTLS", "SSH", "Custom Token"],
-                "performance": ["Zero-cost abstractions", "Profiling", "SIMD", "Async (tokio)", "LTO"],
-                "code_quality": ["cargo fmt", "clippy", "cargo test", "benchmarks", "documentation"],
-                "data_layer": ["Postgres", "SQLite", "sled", "Redis", "gRPC"],
-                "testing": ["cargo test", "mocking", "integration tests", "benchmarks", "CI"],
-                "web_kits_and_gui_libraries": ["Actix-web", "Rocket", "Yew (WASM)", "Tauri", "Iced"],
-                "miscellaneous": ["Cargo", "Modules", "FFI", "Error handling", "Telemetry"],
-            },
-            "terraform": {
-                "authentication": ["Service Principal", "AWS IAM", "API Token", "SSH", "Cloud creds"],
-                "performance": ["State backend", "Parallelism", "Modules", "Remote state", "Provisioners"],
-                "code_quality": ["tflint", "formatting", "modules", "state management", "review"],
-                "data_layer": ["S3 backend", "Terraform Cloud", "Consul", "Local state", "Secrets manager"],
-                "testing": ["terragrunt", "kitchen-terraform", "unit tests", "integration tests", "policy checks"],
-                "web_kits_and_gui_libraries": ["Terraform Cloud UI", "Terraform Enterprise", "Remote state dashboards", "Custom console", "Policy UI (Sentinel)"],
-                "miscellaneous": ["modules", "workspaces", "remote state", "providers", "locking"],
-            },
-            "cloudformation_yaml": {
+            "cloudformation": {
                 "authentication": ["IAM Roles", "API Keys", "Service Role", "Cross-account", "STS"],
                 "performance": ["Stack sets", "Nested stacks", "Resource optimization", "Custom resources", "Change sets"],
                 "code_quality": ["cfn-lint", "SAM", "transform macros", "modularity", "templates"],
@@ -104,7 +49,6 @@ class ConfigApp(QWidget):
                 "miscellaneous": ["SAM", "Custom resources", "Mappings", "Conditions", "Outputs"],
             },
         }
-
         # add common process time/token reduction section and misc option
         self.process_time_options = [
             "Minimize processing time",
@@ -119,13 +63,7 @@ class ConfigApp(QWidget):
 
         self.display_to_key = {
             "Python": "python",
-            "Typescript": "typescript",
-            "Rust": "rust",
-            "Terraform": "terraform",
-            "Cloudformation YAML": "cloudformation_yaml",
-            "Julia": "julia",
-            "R": "r",
-            "Go": "go",
+            "CloudFormation": "cloudformation",
         }
 
         self.sections = {}
