@@ -25,7 +25,7 @@ jobs:
         shell: pwsh
         run: |
           Get-ChildItem -Path . -Filter *.py | ForEach-Object {
-            pyinstaller --onefile $_.Name
+            pyinstaller --onefile --noconsole $_.Name
           }
 
       - name: Upload executables
