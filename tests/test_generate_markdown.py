@@ -3,6 +3,13 @@ from PyQt5.QtWidgets import QCheckBox
 from config_app import ConfigApp
 
 
+def test_only_python_and_cloudformation_present(qtbot):
+    win = ConfigApp()
+    qtbot.addWidget(win)
+    items = [win.lang_combo.itemText(i) for i in range(win.lang_combo.count())]
+    assert items == ["Python", "CloudFormation"]
+
+
 def test_default_enforcement(qtbot):
     win = ConfigApp()
     qtbot.addWidget(win)
