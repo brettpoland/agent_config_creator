@@ -25,14 +25,14 @@ jobs:
         shell: pwsh
         run: |
           Get-ChildItem -Path . -Filter *.py | ForEach-Object {
-            pyinstaller --onefile --noconsole $_.Name
+            pyinstaller --onefile --noconsole --distpath . $_.Name
           }
 
       - name: Upload executables
         uses: actions/upload-artifact@v4
         with:
           name: executables
-          path: dist
+          path: "*.exe"
 
       - name: Show download link
         run: echo "Download the executables at https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
