@@ -28,38 +28,11 @@ class ConfigApp(QWidget):
         self.setWindowTitle("Agent Coding Config Creator")
         self.setGeometry(100, 100, 700, 650)
 
-        # mapping: canonical keys -> sections -> options
+        # mapping: canonical keys -> sections -> options (none defined yet)
         self.section_options_by_lang = {
-            "python": {
-                "authentication": ["GitHub", "AWS IAM", "Personal Token", "SSH Key", "OAuth App"],
-                "performance": ["CPython", "Async/Await", "Numba", "C extensions", "Profiling"],
-                "code_quality": ["Black", "Flake8", "mypy", "Pre-commit", "isort"],
-                "data_layer": ["S3", "Local FS", "SQLite", "Postgres", "Redis"],
-                "testing": ["pytest", "unittest", "tox", "mock", "integration tests"],
-                "web_kits_and_gui_libraries": ["Django", "Flask", "FastAPI", "Qt5 (PyQt5)", "Tkinter"],
-                "miscellaneous": ["virtualenv", "packaging", "logging", "docs", "CI"],
-            },
-            "cloudformation": {
-                "authentication": ["IAM Roles", "API Keys", "Service Role", "Cross-account", "STS"],
-                "performance": ["Stack sets", "Nested stacks", "Resource optimization", "Custom resources", "Change sets"],
-                "code_quality": ["cfn-lint", "SAM", "transform macros", "modularity", "templates"],
-                "data_layer": ["S3", "DynamoDB", "RDS", "Parameter Store", "Secrets Manager"],
-                "testing": ["cfn-nag", "taskcat", "integration tests", "stack policy tests", "CI/CD"],
-                "web_kits_and_gui_libraries": ["CloudFormation Console UI", "SAM Local UI", "Custom resource dashboards", "Change set viewers", "Template visualizers"],
-                "miscellaneous": ["SAM", "Custom resources", "Mappings", "Conditions", "Outputs"],
-            },
+            "python": {},
+            "cloudformation": {},
         }
-        # add common process time/token reduction section and misc option
-        self.process_time_options = [
-            "Minimize processing time",
-            "Reduce token usage",
-            "Enable response summarization",
-        ]
-        for opts in self.section_options_by_lang.values():
-            opts["process_time_token_reduction"] = list(self.process_time_options)
-            opts.setdefault("miscellaneous", []).append(
-                "Automatically push and merge any code updates to main"
-            )
 
         self.display_to_key = {
             "Python": "python",
@@ -71,10 +44,7 @@ class ConfigApp(QWidget):
         self.section_enforcement = {}
 
         # human-friendly section display names (override default title-casing)
-        self.section_display_names = {
-            "web_kits_and_gui_libraries": "Web / GUI Libraries",
-            "process_time_token_reduction": "Process Time / Token Reduction",
-        }
+        self.section_display_names = {}
 
         self._build_ui()
 
@@ -154,19 +124,7 @@ class ConfigApp(QWidget):
         key = self.display_to_key.get(lang_display, lang_display.lower())
         opts_map = self.section_options_by_lang.get(key, {})
 
-        order = [
-            "process_time_token_reduction",
-            "authentication",
-            "performance",
-            "code_quality",
-            "data_layer",
-            "testing",
-            "web_kits_and_gui_libraries",
-            "miscellaneous",
-        ]
-
-        for sec in order:
-            opts = opts_map.get(sec)
+        for sec, opts in opts_map.items():
             if not opts:
                 continue
 
@@ -243,22 +201,7 @@ class ConfigApp(QWidget):
         fmt = "agent.md" if self.agent_radio.isChecked() else "Co-Pilot"
         lines = ["# Agent Configuration", "", f"Language: **{lang}**", f"Format: **{fmt}**", ""]
 
-        order = [
-            "process_time_token_reduction",
-            "authentication",
-            "performance",
-            "code_quality",
-            "data_layer",
-            "testing",
-            "web_kits_and_gui_libraries",
-            "miscellaneous",
-        ]
-
-        for sec in order:
-            gb = self.sections.get(sec)
-            if not gb:
-                continue
-
+        for sec, gb in self.sections.items():
             selected = [cb.text() for cb in gb.findChildren(QCheckBox) if cb.isChecked()]
             if not selected:
                 continue
